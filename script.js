@@ -111,15 +111,22 @@ function submitFeedback() {
         return;
     }
 
-    // --- Replace with YOUR Google Form pre-filled URL ---
-    const formURL = "https://script.google.com/macros/s/AKfycbyNWs9SflCqLghousoKKmaOeu4-m8sfYmpkuxb1hNF55V22qbg55mUHWHDy-LHSxmty/exec" 
-                    + encodeURIComponent(feedback);
+    const scriptURL = "AKfycbxqgTYlIvZBIxZC2mglJgplcMdRH-1wigQfDK6q22EJ2H_qBaOxKM7Y1R2qsYQvXiKk"; // Paste your Apps Script URL
 
-    fetch(formURL, {
+    fetch(scriptURL, {
         method: "POST",
-        mode: "no-cors"
+        mode: "no-cors",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: "feedback=" + encodeURIComponent(feedback)
+    })
+    .then(() => {
+        alert("Thank you for your feedback ❤️");
+        document.getElementById("feedbackText").value = "";
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Oops! Error sending feedback.");
     });
-
-    alert("Thank you for your feedback ❤️");
-    document.getElementById("feedbackText").value = "";
 }
