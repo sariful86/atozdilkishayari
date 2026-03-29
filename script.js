@@ -87,26 +87,39 @@ function generateShayari(){
         return;
     }
 
-    // Randomly pick one shayari
     let data = allShayari[Math.floor(Math.random()*allShayari.length)];
-
-    // Extract category name from filename
     let category = data.page.replace(".html","").replaceAll("-"," ");
     category = category.replace(/\b\w/g, c=>c.toUpperCase());
-
-    // Extract page number from filename
     let pageNumber = data.page.match(/(\d+)\.html$/)?.[1] || "1";
 
-    // Display Shayari text
     document.getElementById("aiShayari").innerText = data.text;
-
-    // Display Source exactly as requested
     document.getElementById("shayariInfo").innerText = 
         `Source: ${category}, Shayari  Page  ${pageNumber}  Serial (${data.serial})`;
 
-    // Full page link
     let linkElem = document.getElementById("shayariLink");
     linkElem.innerText = "📖 Read Full Page";
     linkElem.href = data.page;
     linkElem.style.display = "inline-block";
+}
+
+/* 🎯 Submit Feedback to Google Form */
+function submitFeedback() {
+    const feedback = document.getElementById("feedbackText").value.trim();
+
+    if(feedback === "") {
+        alert("Please type your feedback!");
+        return;
+    }
+
+    // --- Replace with YOUR Google Form pre-filled URL ---
+    const formURL = "https://script.google.com/macros/s/AKfycbyNWs9SflCqLghousoKKmaOeu4-m8sfYmpkuxb1hNF55V22qbg55mUHWHDy-LHSxmty/exec" 
+                    + encodeURIComponent(feedback);
+
+    fetch(formURL, {
+        method: "POST",
+        mode: "no-cors"
+    });
+
+    alert("Thank you for your feedback ❤️");
+    document.getElementById("feedbackText").value = "";
 }

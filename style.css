@@ -119,28 +119,41 @@ li {
 }
 
 /* Feedback */
-textarea {
-    margin-top: 20px;
-    width: 90%;
-    max-width: 400px;
-    border-radius: 10px;
-    padding: 10px;
-    border: none;
-    outline: none;
-    resize: none;
+.feedback-box{
+
+max-width:500px;
+margin:auto;
+text-align:center;
+
 }
 
-/* Button */
-button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 10px;
-    background: white;
-    color: #333;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
+.feedback-box textarea{
+
+width:100%;
+padding:12px;
+border-radius:8px;
+border:1px solid #ccc;
+font-size:16px;
+
+}
+
+.feedback-box button{
+
+margin-top:10px;
+padding:10px 25px;
+background:#ff4081;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+
+}
+
+.feedback-box button:hover{
+
+background:#e73370;
+
 }
 
 button:hover {
