@@ -111,11 +111,12 @@ function submitFeedback() {
         return;
     }
 
-    const scriptURL = "AKfycbxqgTYlIvZBIxZC2mglJgplcMdRH-1wigQfDK6q22EJ2H_qBaOxKM7Y1R2qsYQvXiKk"; // Paste your Apps Script URL
+    // FULL Web App URL from Apps Script deployment
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxqgTYlIvZBIxZC2mglJgplcMdRH-1wigQfDK6q22EJ2H_qBaOxKM7Y1R2qsYQvXiKk/exec";
 
     fetch(scriptURL, {
         method: "POST",
-        mode: "no-cors",
+        mode: "no-cors", // Important: Google Apps Script will accept POST
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
