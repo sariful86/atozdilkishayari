@@ -3,118 +3,101 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Instagram Style Login</title>
+<title>Login | A To Z Dil Ki Shayari</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-
 <script src="firebase.js"></script>
 
 <style>
-
-/* 🌈 BACKGROUND */
 body{
     margin:0;
-    height:100vh;
+    padding:0;
+    font-family:'Poppins',sans-serif;
+    background: linear-gradient(135deg,#141414,#1f1f1f);
     display:flex;
     justify-content:center;
     align-items:center;
-    font-family:Arial;
-    overflow:hidden;
-    background: linear-gradient(135deg,#0f0f0f,#1a1a1a,#0f0f0f);
-    color:white;
+    min-height:100vh;
+    color:#fff;
 }
 
-/* 🔵 FLOATING SHAPES */
-.bg span{
-    position:absolute;
-    width:80px;
-    height:80px;
-    background:rgba(255,255,255,0.05);
-    border-radius:50%;
-    animation: float 10s infinite;
-}
-
-.bg span:nth-child(1){top:10%; left:20%;}
-.bg span:nth-child(2){top:70%; left:10%;}
-.bg span:nth-child(3){top:40%; left:80%;}
-.bg span:nth-child(4){top:80%; left:70%;}
-
-@keyframes float{
-    0%{transform:translateY(0);}
-    50%{transform:translateY(-40px);}
-    100%{transform:translateY(0);}
-}
-
-/* 💎 CARD */
+/* CARD */
 .card{
-    width:340px;
+    width:90%;
+    max-width:360px;
     padding:30px;
-    border-radius:20px;
+    border-radius:16px;
     background:rgba(255,255,255,0.08);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(10px);
     text-align:center;
-    box-shadow:0 10px 40px rgba(0,0,0,0.6);
+    box-shadow:0 8px 24px rgba(0,0,0,0.5);
 }
 
 /* TITLE */
 h1{
-    margin:0;
-    font-size:24px;
+    font-size:22px;
+    margin-bottom:8px;
 }
 
-/* TEXT */
+/* SUBTEXT */
 p{
-    font-size:13px;
+    font-size:14px;
     color:#bbb;
+    margin-bottom:20px;
 }
 
-/* 🔵 BUTTON */
+/* BUTTONS */
 button{
     width:100%;
-    margin-top:15px;
     padding:12px;
+    margin:10px 0;
     border:none;
-    border-radius:12px;
-    font-weight:bold;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:600;
     cursor:pointer;
     display:flex;
     justify-content:center;
     align-items:center;
     gap:10px;
-    background:white;
-    color:black;
     transition:0.2s;
 }
 
 button:hover{
-    transform:scale(1.05);
+    transform:scale(1.03);
 }
 
-/* ICON */
-img{
-    width:20px;
+/* GOOGLE BUTTON */
+.google{
+    background:#fff;
+    color:#000;
 }
 
 /* GUEST BUTTON */
 .guest{
     background:transparent;
-    color:white;
+    color:#fff;
     border:1px solid #555;
+}
+
+/* ICONS */
+img{
+    width:20px;
 }
 
 /* LOADER */
 .loader{
     display:none;
-    margin-top:10px;
+    margin:15px auto 0;
+    width:22px;
+    height:22px;
     border:3px solid #444;
-    border-top:3px solid white;
+    border-top:3px solid #fff;
     border-radius:50%;
-    width:20px;
-    height:20px;
     animation:spin 1s linear infinite;
-    margin-left:auto;
-    margin-right:auto;
 }
 
 @keyframes spin{
@@ -122,68 +105,60 @@ img{
     100%{transform:rotate(360deg);}
 }
 
+/* SMALL NOTE */
 .small{
-    font-size:11px;
+    font-size:12px;
     color:#aaa;
-    margin-top:10px;
+    margin-top:12px;
 }
 
+/* RESPONSIVE */
+@media(max-width:400px){
+    .card{
+        padding:20px;
+    }
+    h1{
+        font-size:20px;
+    }
+    p{
+        font-size:13px;
+    }
+    button{
+        font-size:14px;
+        padding:10px;
+    }
+}
 </style>
-
 </head>
-
 <body>
-
-<!-- floating bg -->
-<div class="bg">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
 
 <div class="card">
 
-    <h1>❤️ Shayari App</h1>
-    <p>Login to continue like Instagram</p>
+<h1>❤️ A To Z Dil Ki Shayari</h1>
+<p>Login to continue and enjoy shayari</p>
 
-    <!-- GOOGLE LOGIN -->
-    <button onclick="login()">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
-        Continue with Google
-    </button>
+<button class="google" onclick="login()">
+<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+Continue with Google
+</button>
 
-    <!-- GUEST -->
-    <button class="guest" onclick="guest()">
-        👤 Continue as Guest
-    </button>
+<button class="guest" onclick="guest()">👤 Continue as Guest</button>
 
-    <div class="loader" id="loader"></div>
+<div class="loader" id="loader"></div>
 
-    <div class="small">
-        New users auto account create ho jayega 🚀
-    </div>
+<div class="small">New users will auto-create an account 🚀</div>
 
 </div>
 
 <script>
-
-// 🔥 LOGIN
 function login(){
-
     document.getElementById("loader").style.display="block";
-
     let provider = new firebase.auth.GoogleAuthProvider();
-
     firebase.auth().signInWithPopup(provider)
     .then(res=>{
-
         document.getElementById("loader").style.display="none";
-
         alert("Welcome " + res.user.displayName);
-
         window.location="index.html";
-
     })
     .catch(err=>{
         document.getElementById("loader").style.display="none";
@@ -191,23 +166,18 @@ function login(){
     });
 }
 
-// 👤 GUEST MODE
 function guest(){
-
-    alert("Guest mode enabled 👍");
-
     localStorage.setItem("guest","true");
-
+    alert("Guest mode enabled 👍");
     window.location="index.html";
 }
 
-// 🔥 AUTO LOGIN
+// AUTO LOGIN
 firebase.auth().onAuthStateChanged(user=>{
     if(user){
         window.location="index.html";
     }
 });
-
 </script>
 
 </body>
