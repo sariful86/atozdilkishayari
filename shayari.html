@@ -31,8 +31,6 @@
 <div id="randomBox">
 <p id="randomText"></p>
 
-<div id="randomSource"></div>
-
 <a id="randomLink" target="_blank" style="display:none;">
 📖 Read Full Page
 </a>
@@ -45,6 +43,8 @@
 <div id="list"></div>
 
 <script>
+
+    let fakeLikes = {};
 
 // URL PARAMS
 const params = new URLSearchParams(window.location.search);
@@ -75,7 +75,6 @@ let formattedCategory = category
 
 title.innerText = formattedCategory;
 
-// Browser tab title
 document.title = formattedCategory + " | A To Z Dil Ki Shayari";
 
 let arr = data[category];
@@ -87,7 +86,7 @@ let pageData = arr.slice(start,end);
 
 list.innerHTML = "";
 
-// 🎨 CATEGORY BACKGROUND MAP
+// BACKGROUND
 let bg = {
 love:"https://images.unsplash.com/photo-1518199266791-5375a83190b7",
 sad:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
@@ -107,7 +106,6 @@ let letter = String.fromCharCode(65 + index);
 let div = document.createElement("div");
 div.className = "shayari-box";
 
-// 🎨 background set
 div.style.backgroundImage = `url(${bg[category] || bg["love"]})`;
 
 div.innerHTML = `
@@ -187,7 +185,7 @@ link.innerText = "📖 Source: "+randomCat+" Page "+pageNum;
 link.style.display="block";
 }
 
-// LIKE
+// LIKE FIXED
 function like(id,btn){
 
 const user = firebase.auth().currentUser;
@@ -203,20 +201,26 @@ setTimeout(()=>btn.classList.remove("liked"),300);
 
 const ref = db.collection("likes").doc(id);
 
-ref.get().then(doc=>{
-
-let data = doc.exists ? doc.data() : {};
-let users = data.users || [];
-
 let userId;
 
 if(user){
-userId = user.email;
+userId = user.uid;
 }else{
+
 if(!localStorage.getItem("guest_id")){
-localStorage.setItem("guest_id",Date.now());
+localStorage.setItem("guest_id","guest_"+Date.now());
 }
-userId="guest_"+localStorage.getItem("guest_id");
+
+userId = localStorage.getItem("guest_id");
+
+}
+
+ref.get().then(doc=>{
+
+let users = [];
+
+if(doc.exists){
+users = doc.data().users || [];
 }
 
 if(users.includes(userId)){
@@ -225,17 +229,57 @@ users = users.filter(u=>u!==userId);
 users.push(userId);
 }
 
-return ref.set({users:users,count:users.length});
+return ref.set({
+users:users,
+count:users.length
+});
 
-}).then(()=> loadLike(id));
+}).then(()=>{
+loadLike(id);
+});
+
 }
 
 // LOAD LIKE
 function loadLike(id){
+
+// agar fake like generate nahi hua hai
+if(!fakeLikes[id]){
+
+let r = Math.random();
+
+if(r < 0.25){
+fakeLikes[id] = Math.floor(Math.random()*500)+100; 
+}
+else if(r < 0.5){
+fakeLikes[id] = Math.floor(Math.random()*900)+100; 
+}
+else if(r < 0.7){
+fakeLikes[id] = Math.floor(Math.random()*9000)+1000; 
+}
+else if(r < 0.9){
+fakeLikes[id] = Math.floor(Math.random()*20000)+10000;
+}
+else{
+fakeLikes[id] = Math.floor(Math.random()*50000)+30000;
+}
+
+}
+
 db.collection("likes").doc(id).onSnapshot(doc=>{
-let data = doc.exists ? doc.data() : {count:0};
-document.getElementById("l-"+id).innerText=data.count||0;
+
+let realLikes = 0;
+
+if(doc.exists){
+realLikes = doc.data().count || 0;
+}
+
+let total = fakeLikes[id] + realLikes;
+
+document.getElementById("l-"+id).innerText = formatLikes(total);
+
 });
+
 }
 
 // COPY
@@ -251,7 +295,7 @@ let text=document.getElementById("text-"+id).innerText;
 window.open("https://wa.me/?text="+encodeURIComponent(text));
 }
 
-// DOWNLOAD IMAGE 🔥
+// DOWNLOAD IMAGE
 function downloadImage(id){
 
 let text = document.getElementById("text-"+id).innerText;
@@ -292,6 +336,7 @@ let link = document.createElement("a");
 link.download = "shayari.png";
 link.href = canvas.toDataURL();
 link.click();
+
 }
 
 // TRENDING
@@ -305,6 +350,21 @@ time:Date.now()
 }
 });
 }
+
+
+
+
+
+function formatLikes(num){
+
+if(num >= 1000){
+return (num/1000).toFixed(1) + "K";
+}
+
+return num;
+
+}
+
 
 </script>
 

@@ -25,33 +25,20 @@
 <script>
 
 // LOAD TRENDING
-db.collection("likes")
-.orderBy("count","desc")
-.limit(50)
-.onSnapshot(snapshot=>{
+function loadTrending(){
 
-let list = document.getElementById("list");
-list.innerHTML = "";
+    db.collection("likes")
+.orderBy("count","desc")
+.limit(20)
+.get()
+.then(snapshot=>{
 
 snapshot.forEach(doc=>{
-
-let data = doc.data();
-let id = doc.id;
-
-let div = document.createElement("div");
-div.className = "shayari-box";
-
-div.innerHTML = `
-<b>❤️ ${data.count} Likes</b>
-
-<div>${id.replaceAll("_"," ")}</div>
-`;
-
-list.appendChild(div);
-
+console.log(doc.id,doc.data().count);
 });
 
 });
+}
 
 </script>
 
