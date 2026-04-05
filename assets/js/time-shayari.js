@@ -1,92 +1,123 @@
+// ====== CONFIG ======
+const defaultCity = "Kolkata"; // default city agar user location deny kare
+const weatherApiKey = "381fbe9ed0c0e34b7859353fcf6aaad3"; // OpenWeatherMap API
+
+// ====== LOAD SHAYARI ======
 async function loadTimeShayari() {
-    try {
-        const now = new Date();
-        const hour = now.getHours();
+    const now = new Date();
+    const hour = now.getHours();
 
-        let file = "";
-        let title = "";
+    let file = "";
+    let title = "";
 
-        // 🌅 Morning
-        if (hour >= 5 && hour < 12) {
-            file = "data/morning.json";
-            title = "Good Morning Shayari";
-            document.body.classList.add("morning");
-        } 
-        // 🌙 Night
-        else if (hour >= 21 || hour < 3) {
-            file = "data/night.json";
-            title = "Good Night Shayari";
-            document.body.classList.add("night");
-        } 
-        else {
-            return; // beech ka time kuch nahi karega
-        }
+    document.body.classList.remove("morning","night");
 
+    if(hour >=5 && hour <12){
+        file="data/morning.json";
+        title="Good Morning Shayari";
+        document.body.classList.add("morning");
+    } else if(hour >=21 || hour<3){
+        file="data/night.json";
+        title="Good Night Shayari";
+        document.body.classList.add("night");
+    } else{
+        document.getElementById("shayari-title").innerText="Welcome!";
+        document.getElementById("shayari-text").innerText="Have a great day!";
+        return;
+    }
+
+    try{
         const res = await fetch(file);
         const data = await res.json();
-
         let dayIndex = now.getDate();
-        if (hour < 3) {
-            dayIndex = dayIndex - 1;
-        }
+        if(hour<3) dayIndex -=1;
+        const index = Math.abs(dayIndex)%data.length;
 
-        const index = Math.abs(dayIndex) % data.length;
-
-        const titleEl = document.getElementById("shayari-title");
-        const textEl = document.getElementById("shayari-text");
-
-        if (titleEl && textEl) {
-            titleEl.innerText = title;
-
-            // ✨ Typewriter effect
-            typeWriter(data[index], textEl);
-        }
-
-    } catch (err) {
-        console.log("Error loading shayari:", err);
+        document.getElementById("shayari-title").innerText = title;
+        typeWriter(data[index], document.getElementById("shayari-text"));
+    } catch(e){
+        console.error("Shayari load error:",e);
+        document.getElementById("shayari-text").innerText="Shayari not available";
     }
+
+    loadWeather();
 }
 
-// ✨ Typewriter function
-function typeWriter(text, element, speed = 30) {
-    let i = 0;
-    element.innerHTML = "";
-
-    function typing() {
-        if (i < text.length) {
-            element.innerHTML += text.charAt(i);
+// ====== TYPEWRITER ======
+function typeWriter(text, el, speed=30){
+    el.innerHTML="";
+    let i=0;
+    function typing(){
+        if(i<text.length){
+            el.innerHTML+=text.charAt(i);
             i++;
-            setTimeout(typing, speed);
+            setTimeout(typing,speed);
         }
     }
-
     typing();
 }
 
-// ❤️ Like button function
-function likeShayari() {
-    const text = document.getElementById("shayari-text").innerText;
-    let fav = JSON.parse(localStorage.getItem("favShayari")) || [];
+// ====== CURSOR EFFECT ======
+function addCursorEffect(){
+    const el = document.getElementById("shayari-text");
+    setInterval(()=>{ el.classList.toggle("cursor"); },500);
+}
 
-    if (!fav.includes(text)) {
-        fav.push(text);
-        localStorage.setItem("favShayari", JSON.stringify(fav));
-        alert("Saved to Favorites ❤️");
+// ====== WEATHER ======
+async function loadWeather(){
+    const box = document.getElementById("weather-box");
+
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(
+            async (position)=>{
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                await fetchWeatherByCoords(lat, lon, box);
+            },
+            async (error)=>{
+                console.warn("Location denied or error:", error);
+                await fetchWeatherByCity(defaultCity, box);
+            }
+        );
     } else {
-        alert("Already saved 😄");
+        await fetchWeatherByCity(defaultCity, box);
     }
 }
 
-
-function addCursorEffect() {
-    const textEl = document.getElementById("shayari-text");
-
-    setInterval(() => {
-        textEl.classList.toggle("cursor");
-    }, 500);
+async function fetchWeatherByCoords(lat, lon, box){
+    try{
+        const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${weatherApiKey}`);
+        const data = await res.json();
+        if(data.cod===200){
+            box.innerHTML = `<img src="https://openweathermap.org/img/wn/${data.weather[0].icon}.png" style="width:30px;vertical-align:middle;"> ${data.name}: ${Math.round(data.main.temp)}°C, ${data.weather[0].description}`;
+        } else {
+            box.innerText="Weather unavailable";
+        }
+    } catch(e){
+        console.error("Weather error:",e);
+        box.innerText="Weather error";
+    }
 }
 
-document.addEventListener("DOMContentLoaded", addCursorEffect);
+async function fetchWeatherByCity(city, box){
+    try{
+        const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${weatherApiKey}`);
+        const data = await res.json();
+        if(data.cod===200){
+            box.innerHTML = `<img src="https://openweathermap.org/img/wn/${data.weather[0].icon}.png" style="width:30px;vertical-align:middle;"> ${city}: ${Math.round(data.main.temp)}°C, ${data.weather[0].description}`;
+        } else {
+            box.innerText="Weather unavailable";
+        }
+    } catch(e){
+        console.error("Weather error:",e);
+        box.innerText="Weather error";
+    }
+}
 
-// Run after page load
-document.addEventListener("DOMContentLoaded", loadTimeShayari);
+// ====== INIT ======
+document.addEventListener("DOMContentLoaded",()=>{
+    addCursorEffect();
+    loadTimeShayari();
+    setInterval(loadTimeShayari,60000); // shayari refresh
+    setInterval(loadWeather,300000);    // weather refresh every 5 min
+});

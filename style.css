@@ -324,141 +324,52 @@ font-size:14px;
 
 
 /* 🌈 Background Animation */
-body.morning {
-    background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a1c4fd, #c2e9fb);
-    background-size: 400% 400%;
-    animation: gradientBG 10s ease infinite;
-}
-
-body.night {
-    background: linear-gradient(-45deg, #141e30, #243b55, #000000, #434343);
-    background-size: 400% 400%;
-    animation: gradientBG 12s ease infinite;
-}
-
-/* 🔄 Background move */
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* 📦 Shayari Box */
-#auto-shayari-box {
-    max-width: 500px;
-    margin: 100px auto;
-    padding: 25px;
-    text-align: center;
-    border-radius: 20px;
+#auto-shayari-box{
+    text-align:center;
+    margin:50px auto;
+    padding:20px;
+    max-width:400px;
+    border-radius:15px;
     backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 25px rgba(255,255,255,0.2);
-    animation: fadeIn 1.5s ease;
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
 }
 
-/* ✨ Glow Title */
-#shayari-title {
-    font-size: 26px;
-    color: #fff;
-    text-shadow: 0 0 10px #fff, 0 0 20px #ff6ec4, 0 0 30px #7873f5;
+#shayari-title{
+    font-size:24px;
+    color:#fff;
+    margin-bottom:10px;
+    text-shadow: 0 0 10px #fff;
 }
 
-/* 💫 Subtitle */
-#shayari-subtitle {
-    font-size: 14px;
-    color: #ddd;
-    margin-bottom: 10px;
-    animation: pulse 2s infinite;
+#shayari-text{
+    font-size:18px;
+    color:#fff;
+    line-height:1.6;
 }
 
-/* 📜 Shayari Text */
-#shayari-text {
-    font-size: 18px;
-    color: #fff;
-    line-height: 1.6;
-    margin-top: 10px;
-    animation: fadeUp 1.5s ease;
-}
-
-/* ❤️ Like Button */
-.like-btn {
-    margin-top: 15px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 30px;
-    background: linear-gradient(45deg, #ff6ec4, #7873f5);
-    color: #fff;
-    cursor: pointer;
-    transition: 0.3s;
-    box-shadow: 0 0 10px rgba(255,255,255,0.3);
-}
-
-.like-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 20px #fff;
-}
-
-/* ✨ Animations */
-@keyframes fadeIn {
-    from {opacity: 0; transform: scale(0.9);}
-    to {opacity: 1; transform: scale(1);}
-}
-
-@keyframes fadeUp {
-    from {opacity: 0; transform: translateY(20px);}
-    to {opacity: 1; transform: translateY(0);}
-}
-
-@keyframes pulse {
-    0% {opacity: 0.6;}
-    50% {opacity: 1;}
-    100% {opacity: 0.6;}
-}
-
-
-.cursor::after {
-    content: "|";
+.cursor::after{
+    content:"|";
     animation: blink 1s infinite;
 }
-
-@keyframes blink {
-    0%, 50%, 100% {opacity: 1;}
-    25%, 75% {opacity: 0;}
+@keyframes blink{
+    0%,50%,100%{opacity:1;}
+    25%,75%{opacity:0;}
 }
 
-
-/* ==================== */
-/* CATEGORY CARD TEXT FIX */
-/* ==================== */
-
-/* Agar card me text span ke andar hai */
-.card span {
-    display: block;
-    padding: 10px;
-    color: #000000; /* apna desired text color */
-    font-weight: bold; /* optional */
-    text-align: center; /* center alignment */
+/* Morning & Night background */
+body.morning{
+    background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a1c4fd, #c2e9fb);
+    background-size:400% 400%;
+    animation: gradientBG 10s ease infinite;
 }
-
-/* Agar card me text <a> ke andar hai */
-.card span a,
-.card a.card-link {
-    color: #ff4d6d; /* custom link color */
-    text-decoration: none; /* underline remove */
-    font-weight: bold;
+body.night{
+    background: linear-gradient(-45deg,#141e30,#243b55,#000000,#434343);
+    background-size:400% 400%;
+    animation: gradientBG 12s ease infinite;
 }
-
-/* Hover effect for link text */
-.card span a:hover,
-.card a.card-link:hover {
-    color: #ff85a2; /* hover color */
-    text-decoration: underline; /* optional */
-}
-
-/* Shayari Page Tagline */
-#box2 {
-    font-size: 17px;
-    color: black;
-    margin-top: 5px;
-    animation: fadeInTagline 2s ease;
+@keyframes gradientBG{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
 }
